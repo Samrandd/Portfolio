@@ -1,7 +1,14 @@
 # Data Science Portfolio:  
 My ongoing portfolio showcasing Data Science and Programming Projects
 
-*Project 1: SAT Scores + Summary Statistics
+Project No. | Title
+------------ | -------------
+Project 1| SAT Scores + Summary Statistics
+Project 2 | Ames Housing Data + Linear Regression
+Project 3 | Web Scraping + Logistic Regression and Random forest
+Project 4 | Bank deposit+ Logistics regression, decision Tree, SVM, Naive Bayes and KNN
+
+Project 1: SAT Scores + Summary Statistics
 *Project 2: Ames Housing Data+ Linear Regression
 *Project 3: Web Scraping + Logistic Regression and Random forest 
 *Project 4: Bank deposit+ Logistics regression, decision Tree, SVM, Naive Bayes and KNN
