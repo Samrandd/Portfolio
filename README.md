@@ -1,10 +1,10 @@
 # Data Science Portfolio:  
 My ongoing portfolio showcasing Data Science and Programming Projects
 
-Project 1: SAT Scores + Summary Statistics
-Project 2: Ames Housing Data+ Linear Regression
-Project 3: Web Scraping + Logistic Regression and Random forest 
-Project 4: Bank deposit+ Logistics regression, decision Tree, SVM, Naive Bayes and KNN
+*Project 1: SAT Scores + Summary Statistics
+*Project 2: Ames Housing Data+ Linear Regression
+*Project 3: Web Scraping + Logistic Regression and Random forest 
+*Project 4: Bank deposit+ Logistics regression, decision Tree, SVM, Naive Bayes and KNN
 
 During my study at General Assembly I completed many projects which show my skill sets and understanding of machine learning, statistics, python, and practical application of Data Science methodologies to real world problems. The readme files serve as a primer to understanding the code and approach taken. All solutions can be found in the corresponding project's "solutions" folder - labeled as that project's name.
 
