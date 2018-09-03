@@ -1,4 +1,5 @@
-Data Science: Capstone Project
+#Project 4: Capstone Project
+
 The Capstone Project is divided into 5 deliverables, each building on top of skills learned previously to scaffold students' learning over the entire course. Project deliverables include objectives, requirements, rubrics, and suggested resources - all of which tie into the overall competencies for this course.
 
 See the feedback guidelines to read more about how we provide feedback to students.
