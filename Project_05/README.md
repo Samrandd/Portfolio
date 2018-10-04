@@ -4,6 +4,9 @@
 Imagine that an automobile manufacturer has developed prototypes for a new vehicle. Before introducing the new model into its range, the manufacturer wants to determine which existing vehicles on the market are most like the prototypes--that is, how vehicles can be grouped, which group is the most similar with the model, and therefore which models they will be competing against.
 
 Our objective here, is to use clustering methods, to find the most distinctive clusters of vehicles. It will summarize the existing vehicles and help manufacture to make decision about new models simply.
+
+This assignment (except the dataset taken from kaggle) was prepared by Saeed aghabozorgi and can be found in the Machine learning with Python IBM in coursera.
+
 Kaggle: Context
 This dataset consist of data From 1985 Ward's Automotive Yearbook. Here are the sources
 
