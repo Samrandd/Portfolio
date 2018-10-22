@@ -6,7 +6,7 @@ Project No. | Title
 Project 1| SAT Scores + Summary Statistics
 Project 2 | Ames Housing Data + Linear Regression
 Project 3 | Web Scraping + Logistic Regression and Random forest
-Project 4_Capstone | Bank deposit+ Logistics regression, decision Tree, SVM, Naive Bayes and KNN
+Project 4 | Bank deposit+ Logistics regression, decision Tree, SVM, Naive Bayes and KNN
 Project 5|Clustering on vehicle Dataset
 Project 6|Indian Liver Patient Dataset+Logistics regression, decision Tree,Random Forest,Bagging classifier and KNN
 Visualisation| Use Tableau to distill insights from the data
