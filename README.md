@@ -1,5 +1,5 @@
-# Data Science Portfolio:  
-My ongoing portfolio showcasing Data Science and Programming Projects
+# Data Analysis Portfolio:  
+My ongoing portfolio showcasing Data Analysis and Programming Projects
 
 Project No. | Title
 ------------ | -------------
