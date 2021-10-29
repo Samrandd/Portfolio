@@ -10,21 +10,12 @@
 # In[111]:
 
 
+
 # Print out the first 5 lines from the transfusion.data file
-get_ipython().system('... ... datasets/transfusion.data')
+!tail -n5 datasets/transfusion.data
 
-
-# In[112]:
-
-
-get_ipython().run_cell_magic('nose', '', '\nlast_input = In[-2]\n\nimport re\ntry:\n    bash_cmd = re.search(r\'get_ipython\\(\\).system\\(\\\'(.*)\\\'\\)\', last_input).group(1)\nexcept AttributeError:\n    bash_cmd = \'\'\n\ndef test_head_command():\n    assert \'head\' in bash_cmd, \\\n        "Did you use \'head\' command?"\n    assert (\'-n\' in bash_cmd) or (\'-5\' in bash_cmd), \\\n        "Did you use \'-n\' parameter?"\n    assert \'5\' in bash_cmd, \\\n        "Did you specify the correct number of lines to print?"')
-
-
-# ## 2. Loading the blood donations data
+## 2. Loading the blood donations data
 # <p>We now know that we are working with a typical CSV file (i.e., the delimiter is <code>,</code>, etc.). We proceed to loading the data into memory.</p>
-
-# In[113]:
-
 
 # Import pandas
 import pandas as pd
@@ -36,11 +27,6 @@ transfusion = pd.read_csv("datasets/transfusion.data")
 # ... YOUR CODE FOR TASK 2 ...
 print(transfusion.head(5))
 
-
-# In[114]:
-
-
-get_ipython().run_cell_magic('nose', '', '\nlast_output = _\n\ndef test_pandas_loaded():\n    assert \'pd\' in globals(), \\\n        "\'pd\' module not found. Please check your import statement."\n\ndef test_transfusion_loaded():\n    correct_transfusion = pd.read_csv("datasets/transfusion.data")\n    assert correct_transfusion.equals(transfusion), \\\n        "transfusion not loaded correctly."\n    \ndef test_head_output():\n    try:\n        assert "6000" in last_output.to_string()\n    except AttributeError:\n        assert False, \\\n            "Please use transfusion.head() as the last line of code in the cell to inspect the data, not the display() or print() functions."\n    except AssertionError:\n        assert False, \\\n            "Hmm, the output of the cell is not what we expected. You should see 6000 in the first five rows of the transfusion DataFrame."')
 
 
 # ## 3. Inspecting transfusion DataFrame
@@ -72,7 +58,6 @@ get_ipython().run_cell_magic('nose', '', '\ndef strip_comment_lines(cell_input):
 # ## 4. Creating target column
 # <p>We are aiming to predict the value in <code>whether he/she donated blood in March 2007</code> column. Let's rename this it to <code>target</code> so that it's more convenient to work with.</p>
 
-# In[117]:
 
 
 # Rename target column as 'target' for brevity 
@@ -84,13 +69,6 @@ transfusion.rename(
 # Print out the first 2 rows
 # ... YOUR CODE FOR TASK 4 ...
 transfusion.head(2)
-
-
-# In[118]:
-
-
-get_ipython().run_cell_magic('nose', '', '\nlast_output = _\n\ndef test_target_column_added():\n    assert \'target\' in transfusion.columns, \\\n        "\'target\' column not found in transfusion.columns"\n\ndef test_head_2_rows_only():\n    try:\n        assert last_output.shape[0] == 2\n    except AttributeError:\n        assert False, \\\n            "Please use transfusion.head(2) as the last line of code in the cell to inspect the data, not the display() or print() functions."\n    except AssertionError:\n        assert False, \\\n            "Did you call \'head()\' method with the correct number of lines?"')
-
 
 # ## 5. Checking target incidence
 # <p>We want to predict whether or not the same donor will give blood the next time the vehicle comes to campus. The model for this is a binary classifier, meaning that there are only 2 possible outcomes:</p>
@@ -151,9 +129,6 @@ get_ipython().run_cell_magic('nose', '', '\nlast_output = _\n\ndef test_train_te
 # <p><img src="https://assets.datacamp.com/production/project_646/img/tpot-ml-pipeline.png" alt="TPOT Machine Learning Pipeline"></p>
 # <p>TPOT will automatically explore hundreds of possible pipelines to find the best one for our dataset. Note, the outcome of this search will be a <a href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">scikit-learn pipeline</a>, meaning it will include any pre-processing steps as well as the model.</p>
 # <p>We are using TPOT to help us zero in on one model that we can then explore and optimize further.</p>
-
-# In[123]:
-
 
 # Import TPOTClassifier
 from tpot import TPOTClassifier
