@@ -15,7 +15,8 @@ Project 9 | Customer segmentation of UCI’s ‘Online retail’ dataset using K
 Project 10 | Blood donation a mobile blood donation vehicle in Taiwan using Genetic algorithm
 Project 11 | Credit card Approval
 Project 12 | NYC Airbnb Market Price 
-Project 13 | Project 13: Sales Analysis for Value Inc Value
+Project 13 | Sales Analysis for Value Inc Value
+Project 14 | Blue Bank Loan Analysis
 Visualisation| Use Tableau to distill insights from the data
 
 I have ompleted many projects which show my skill sets and understanding of machine learning, statistics, python, and practical application of Data Science methodologies to real world problems. The readme files serve as a primer to understanding the code and approach taken. All solutions can be found in the corresponding project's folder - labeled as that project's name.
