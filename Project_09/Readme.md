@@ -1,4 +1,4 @@
-** Behavioral customer segmentation**
+** Behavioral customer segmentation **
 
  Behavioral customer segmentation, particularly RFM (Recency, Frequency, and Monetary Value) analysis, is a critical method for understanding customer behavior by evaluating purchase patterns. 
 The RFM model segments customers based on three key metrics:
