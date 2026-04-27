@@ -1,0 +1,13 @@
+metric,value
+reviews,700808
+unique_parent_products,112496
+unique_child_asins,115637
+unique_users,631352
+date_min,2000-11-01
+date_max,2023-09-09
+average_rating,3.96
+low_star_share_1_or_2,0.207
+verified_purchase_share,0.905
+average_text_words,32.78
+median_text_words,19.0
+average_helpful_votes,0.924

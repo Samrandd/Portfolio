@@ -1,0 +1,4 @@
+rmse,mae,test_r2,model,features,train_rows,test_rows,target
+1.27825,1.02357,0.3957,rating_controls_only,7,154238,55651,future_3m_rating_decline
+1.27788,1.02304,0.39605,rating_controls_plus_text,14,154238,55651,future_3m_rating_decline
+1.27599,1.0207,0.39783,rating_controls_plus_text_topics,23,154238,55651,future_3m_rating_decline

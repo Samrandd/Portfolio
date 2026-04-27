@@ -20,8 +20,9 @@ Project 14 | Blue Bank Loan Analysis
 Project 15 | BlogMe- Sentiment Analysis
 Project 16 | Predicting employee churn-Delivering Data-Driven HR Guidance
 Project 17 | Customer Churn prediction in the telecommunication industry
+Project 18 | Amazon review text as marketing intelligence for product reputation monitoring
 Visualisation| Use Tableau to distill insights from the data
 
 I have ompleted many projects which show my skill sets and understanding of machine learning, statistics, python, and practical application of Data Science methodologies to real world problems. The readme files serve as a primer to understanding the code and approach taken. All solutions can be found in the corresponding project's folder - labeled as that project's name.
 
-Skills Showcased: Python | SQL | Tableau | Machine Learning | Web Scraping |  Pandas | NumPy | Linear & Logistic Regression modeling | Random Forests | NLP | Naive Bayes|KNN| Technical Writing |kmeans|DBSCAN|Supervised and Unsupervised models
+Skills Showcased: Python | SQL | Tableau | Machine Learning | Web Scraping |  Pandas | NumPy | Linear & Logistic Regression modeling | Random Forests | NLP | Marketing Analytics | Text Analytics | Panel Data | Naive Bayes|KNN| Technical Writing |kmeans|DBSCAN|Supervised and Unsupervised models
