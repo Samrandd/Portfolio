@@ -1,6 +1,8 @@
 from pathlib import Path
 
 import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 import streamlit as st
 from PIL import Image
 
@@ -16,6 +18,7 @@ FIG_DIR = BASE_DIR / "figures"
 DOC_DIR = BASE_DIR / "docs"
 
 
+@st.cache_data
 def load_csv(filename: str) -> pd.DataFrame:
     return pd.read_csv(DATA_DIR / filename)
 
@@ -28,17 +31,22 @@ def show_image(filename: str, caption: str) -> None:
         st.warning(f"Missing figure: {filename}")
 
 
+def get_numeric_cols(df: pd.DataFrame):
+    return df.select_dtypes(include="number").columns.tolist()
+
+
+def get_categorical_cols(df: pd.DataFrame):
+    return df.select_dtypes(exclude="number").columns.tolist()
+
+
 st.title("🛒 Online Shopper Segmentation Explorer")
-st.caption("K-means vs Gaussian Mixture Models for online shopper behavior analysis")
+st.caption("Interactive customer segmentation dashboard using K-means and Gaussian Mixture Models")
 
 st.markdown(
     """
-This app summarizes an unsupervised learning project using the **Online Shoppers Purchasing Intention** dataset.
-The goal is to identify meaningful shopper behavior segments and compare **K-means clustering** with
-**Gaussian Mixture Models (GMM)**.
-
-The `Revenue` variable was excluded from clustering and used only afterward to evaluate whether the resulting
-segments showed meaningful differences in purchase behavior.
+This app turns my final project into a small analytics product. It summarizes the unsupervised learning results,
+compares K-means and Gaussian Mixture Models, and gives users an interactive data explorer to review tables
+and create their own visualizations.
 """
 )
 
@@ -47,6 +55,7 @@ section = st.sidebar.radio(
     "Choose a section",
     [
         "Project Overview",
+        "Data Explorer",
         "Model Comparison",
         "K-means Results",
         "GMM Results",
@@ -86,6 +95,144 @@ and the final modeled feature matrix contained 75 features.
 
     show_image("revenue_correlation.png", "Correlation of numeric features with Revenue")
 
+
+elif section == "Data Explorer":
+    st.header("Interactive Data Explorer")
+    st.write(
+        """
+Use this section to explore the project result tables or upload your own CSV file.
+This makes the app more like a business dashboard because users can inspect data and build quick visualizations.
+"""
+    )
+
+    data_source = st.radio(
+        "Choose data source",
+        ["Use project result table", "Upload my own CSV"],
+        horizontal=True,
+    )
+
+    if data_source == "Use project result table":
+        table_options = {
+            "Model comparison": "model_summary.csv",
+            "K-means revenue by cluster": "kmeans_revenue.csv",
+            "GMM revenue by cluster": "gmm_revenue.csv",
+            "K-means cluster profile": "kmeans_profile.csv",
+        }
+        selected_table = st.selectbox("Choose a table", list(table_options.keys()))
+        df = load_csv(table_options[selected_table])
+    else:
+        uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
+        if uploaded_file is not None:
+            df = pd.read_csv(uploaded_file)
+        else:
+            st.info("Upload a CSV file to start exploring.")
+            st.stop()
+
+    st.subheader("Data Preview")
+    st.dataframe(df, use_container_width=True, hide_index=True)
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Rows", f"{df.shape[0]:,}")
+    col2.metric("Columns", f"{df.shape[1]:,}")
+    col3.metric("Missing values", f"{int(df.isna().sum().sum()):,}")
+
+    with st.expander("Show summary statistics"):
+        st.dataframe(df.describe(include="all").T, use_container_width=True)
+
+    st.subheader("Build a Visualization")
+
+    numeric_cols = get_numeric_cols(df)
+    categorical_cols = get_categorical_cols(df)
+
+    chart_type = st.selectbox(
+        "Choose chart type",
+        ["Histogram", "Bar chart", "Scatter plot", "Box plot", "Correlation heatmap"],
+    )
+
+    if chart_type == "Histogram":
+        if not numeric_cols:
+            st.warning("This table does not have numeric columns for a histogram.")
+        else:
+            x_col = st.selectbox("Numeric column", numeric_cols)
+            color_col = st.selectbox("Optional color column", ["None"] + categorical_cols)
+            fig = px.histogram(
+                df,
+                x=x_col,
+                color=None if color_col == "None" else color_col,
+                title=f"Distribution of {x_col}",
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+    elif chart_type == "Bar chart":
+        if not categorical_cols and not numeric_cols:
+            st.warning("No suitable columns found.")
+        else:
+            x_col = st.selectbox("Column to count or group by", df.columns.tolist())
+            if df[x_col].nunique() > 30:
+                st.warning("This column has many unique values, so the chart may be crowded.")
+            counts = df[x_col].astype(str).value_counts().reset_index()
+            counts.columns = [x_col, "Count"]
+            fig = px.bar(counts, x=x_col, y="Count", title=f"Count by {x_col}")
+            st.plotly_chart(fig, use_container_width=True)
+
+    elif chart_type == "Scatter plot":
+        if len(numeric_cols) < 2:
+            st.warning("Need at least two numeric columns for a scatter plot.")
+        else:
+            x_col = st.selectbox("X-axis", numeric_cols)
+            y_col = st.selectbox("Y-axis", numeric_cols, index=1 if len(numeric_cols) > 1 else 0)
+            color_col = st.selectbox("Optional color column", ["None"] + df.columns.tolist())
+            fig = px.scatter(
+                df,
+                x=x_col,
+                y=y_col,
+                color=None if color_col == "None" else color_col,
+                title=f"{y_col} vs {x_col}",
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+    elif chart_type == "Box plot":
+        if not numeric_cols:
+            st.warning("Need at least one numeric column for a box plot.")
+        else:
+            y_col = st.selectbox("Numeric column", numeric_cols)
+            x_options = ["None"] + categorical_cols
+            x_col = st.selectbox("Optional category column", x_options)
+            fig = px.box(
+                df,
+                x=None if x_col == "None" else x_col,
+                y=y_col,
+                title=f"Box plot of {y_col}",
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+    elif chart_type == "Correlation heatmap":
+        if len(numeric_cols) < 2:
+            st.warning("Need at least two numeric columns for a correlation heatmap.")
+        else:
+            corr = df[numeric_cols].corr()
+            fig = go.Figure(
+                data=go.Heatmap(
+                    z=corr.values,
+                    x=corr.columns,
+                    y=corr.index,
+                    colorscale="RdBu",
+                    zmin=-1,
+                    zmax=1,
+                )
+            )
+            fig.update_layout(title="Correlation Heatmap")
+            st.plotly_chart(fig, use_container_width=True)
+
+    csv = df.to_csv(index=False).encode("utf-8")
+    st.download_button(
+        label="Download current table as CSV",
+        data=csv,
+        file_name="explored_data.csv",
+        mime="text/csv",
+    )
+
+
 elif section == "Model Comparison":
     st.header("Model Comparison Summary")
     model_summary = load_csv("model_summary.csv")
@@ -95,6 +242,7 @@ elif section == "Model Comparison":
         "K-means with k=3 was the easiest to explain as high-, medium-, and low-intent shopper segments. "
         "The full-covariance GMM with 6 components achieved the best statistical fit by BIC."
     )
+
 
 elif section == "K-means Results":
     st.header("K-means Results")
@@ -122,6 +270,7 @@ The high-intent cluster had the highest purchase rate, while the shallow visitor
 """
     )
 
+
 elif section == "GMM Results":
     st.header("Gaussian Mixture Model Results")
     st.write(
@@ -142,6 +291,7 @@ with BIC used as the primary model selection criterion.
         "because it produced stronger silhouette separation and easier business interpretation."
     )
 
+
 elif section == "Cluster Profiles":
     st.header("Cluster Profiles")
     st.write(
@@ -160,6 +310,7 @@ and lowest bounce/exit rates. The shallow visitor cluster showed almost no `Page
 """
     )
 
+
 elif section == "PCA Visualizations":
     st.header("PCA Visualizations")
     st.write(
@@ -177,6 +328,7 @@ variance, so these plots provide a useful but incomplete 2D view of the full 75-
         show_image("pca_gmm_full.png", "PCA visualization of GMM full covariance, 6 components")
     else:
         show_image("pca_gmm_tied.png", "PCA visualization of GMM tied covariance, 6 components")
+
 
 elif section == "Business Takeaways":
     st.header("Business Takeaways")
@@ -201,6 +353,7 @@ Together, the models suggest that purchase intent is strongly related to browsin
 """
     )
 
+
 elif section == "Project Files":
     st.header("Project Files")
     st.write("The original report, notebook, and HTML code export are included in the `docs/` folder of this repository.")
@@ -213,4 +366,9 @@ elif section == "Project Files":
     ]:
         path = DOC_DIR / file_name
         if path.exists():
-            st.write(f"- `{file_name}`")
+            with open(path, "rb") as file:
+                st.download_button(
+                    label=f"Download {file_name}",
+                    data=file,
+                    file_name=file_name,
+                )
