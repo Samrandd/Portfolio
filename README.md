@@ -1,32 +1,30 @@
-# Data Analysis Portfolio:  
-My ongoing portfolio showcasing Data Analysis and Programming Projects
+# Data Analysis Portfolio
 
-Project No. | Title
------------- | -------------
-Project 1| SAT Scores + Summary Statistics
-Project 2 | Ames Housing Data + Linear Regression
-Project 3 | Web Scraping + Logistic Regression and Random forest
-Project 4 | Bank deposit+ Logistics regression, decision Tree, SVM, Naive Bayes and KNN
-Project 5 |Clustering on vehicle Dataset+ Agglomerative Hierarchical Clustering
-Project 6 |Indian Liver Patient Dataset+Logistics regression, decision Tree,Random Forest,Bagging classifier and KNN
-Project 7 | Generate keywords for an online retailer of furniture using Python 
-Project 8 | Fraud detection using k_means+DBSCAN
-Project 9 | Customer segmentation of UCI's 'Online retail' dataset using K_means clustering algorithm
-Project 10 | Blood donation a mobile blood donation vehicle in Taiwan using Genetic algorithm
-Project 11 | Credit card Approval
-Project 12 | NYC Airbnb Market Price 
-Project 13 | Sales Analysis for Value Inc Value
-Project 14 | Blue Bank Loan Analysis
-Project 15 | BlogMe- Sentiment Analysis
-Project 16 | Predicting employee churn-Delivering Data-Driven HR Guidance
-Project 17 | Customer Churn prediction in the telecommunication industry
-Project 18 | Amazon review text as marketing intelligence for product reputation monitoring
-Visualisation| Use Tableau to distill insights from the data
+My ongoing portfolio showcasing data analysis, machine learning, programming, and visualisation projects.
 
-I have completed many projects which show my skill sets and understanding of machine learning, statistics, python, and practical application of Data Science methodologies to real world problems. These projects span from exploratory data analysis and statistical testing to advanced machine learning modeling and deployment-ready solutions.
+Project | Focus
+--- | ---
+[SAT Score Analysis](sat-score-analysis) | Summary statistics and exploratory analysis
+[Ames Housing Regression](ames-housing-regression) | Housing data regression and classification
+[Job Postings Web Scraping](job-postings-web-scraping) | Web scraping, logistic regression, and random forest modeling
+[Bank Deposit Prediction](bank-deposit-prediction) | Logistic regression, decision trees, SVM, Naive Bayes, and KNN
+[Vehicle Hierarchical Clustering](vehicle-hierarchical-clustering) | Agglomerative hierarchical clustering on vehicle data
+[Liver Patient Classification](liver-patient-classification) | Classification with logistic regression, decision trees, random forest, bagging, and KNN
+[Furniture Keyword Generation](furniture-keyword-generation) | Python keyword generation for an online furniture retailer
+[Fraud Detection with Unsupervised Learning](fraud-detection-unsupervised-learning) | K-means and DBSCAN fraud detection
+[Online Retail Customer Segmentation](online-retail-customer-segmentation) | RFM analysis and customer segmentation
+[Blood Donation Genetic Algorithm](blood-donation-genetic-algorithm) | Blood donation prediction using a genetic algorithm
+[Credit Card Approval Prediction](credit-card-approval-prediction) | Credit card approval modeling
+[NYC Airbnb Market Analysis](nyc-airbnb-market-analysis) | Airbnb market price analysis
+[Value Inc Sales Analysis](value-inc-sales-analysis) | Sales analysis for Value Inc
+[Blue Bank Loan Analysis](blue-bank-loan-analysis) | Loan analysis and business insight
+[BlogMe Sentiment Analysis](blogme-sentiment-analysis) | Sentiment analysis for media content
+[Employee Churn HR Analytics](employee-churn-hr-analytics) | Data-driven employee churn guidance
+[Telecom Customer Churn Prediction](telecom-customer-churn-prediction) | Customer churn prediction in telecommunications
+[Amazon Review Marketing Intelligence](amazon-review-marketing-intelligence) | Review text analytics for product reputation monitoring
+[Online Shopper Segmentation Streamlit App](online-shopper-segmentation-streamlit) | Deployment-ready shopper segmentation dashboard
+[Tableau and Excel Visualisation](Visualisation) | Tableau and Excel visual analytics
 
-<<<<<<< HEAD
-Skills Showcased: Python | SQL | Tableau | Machine Learning | Web Scraping |  Pandas | NumPy | Linear & Logistic Regression modeling | Random Forests | NLP | Marketing Analytics | Text Analytics | Panel Data | Naive Bayes|KNN| Technical Writing |kmeans|DBSCAN|Supervised and Unsupervised models
-=======
-Skills Showcased: Python | SQL | Tableau | Machine Learning | Web Scraping |  Pandas | NumPy | Linear & Logistic Regression modeling | Random Forests | NLP | Naive Bayes|KNN| Technical Writing |kmeans| DBSCAN| Hierarchical Clustering | SVM | Decision Trees | Ensemble Methods | Data Visualization | Feature Engineering | Hypothesis Testing
->>>>>>> 901934d647484440daa656e113397955d3ef8297
+I have completed many projects which show my skill sets and understanding of machine learning, statistics, Python, and practical data science methods for real-world problems. These projects span exploratory data analysis, statistical testing, machine learning modeling, visualization, text analytics, and deployment-ready applications.
+
+Skills showcased: Python | SQL | Tableau | Machine Learning | Web Scraping | Pandas | NumPy | Linear Regression | Logistic Regression | Random Forests | NLP | Marketing Analytics | Text Analytics | Panel Data | Naive Bayes | KNN | K-means | DBSCAN | Hierarchical Clustering | SVM | Decision Trees | Ensemble Methods | Data Visualization | Feature Engineering | Hypothesis Testing | Technical Writing
