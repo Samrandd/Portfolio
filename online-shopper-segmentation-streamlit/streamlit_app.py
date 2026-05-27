@@ -8,7 +8,6 @@ from PIL import Image
 
 st.set_page_config(
     page_title="Online Shopper Segmentation Explorer",
-    page_icon="🛒",
     layout="wide",
 )
 
@@ -39,7 +38,7 @@ def get_categorical_cols(df: pd.DataFrame):
     return df.select_dtypes(exclude="number").columns.tolist()
 
 
-st.title("🛒 Online Shopper Segmentation Explorer")
+st.title("Online Shopper Segmentation Explorer")
 st.caption("Interactive customer segmentation dashboard using K-means and Gaussian Mixture Models")
 
 st.markdown(
