@@ -16,6 +16,111 @@ DATA_DIR = BASE_DIR / "data"
 FIG_DIR = BASE_DIR / "figures"
 DOC_DIR = BASE_DIR / "docs"
 
+INK = "#111827"
+SEGMENT_COLORS = ["#0f766e", "#2563eb", "#f59e0b", "#7c3aed", "#dc2626", "#475569"]
+
+st.markdown(
+    """
+<style>
+    .block-container {
+        max-width: 1180px;
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+    }
+    [data-testid="stSidebar"] {
+        background: #0f172a;
+    }
+    [data-testid="stSidebar"] h1,
+    [data-testid="stSidebar"] h2,
+    [data-testid="stSidebar"] h3,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] label {
+        color: #e5e7eb;
+    }
+    [data-testid="stMetric"] {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 1rem 1.1rem;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+    }
+    [data-testid="stMetricLabel"] {
+        color: #64748b;
+        font-size: 0.82rem;
+    }
+    [data-testid="stMetricValue"] {
+        color: #111827;
+        font-weight: 700;
+    }
+    .app-kicker {
+        color: #0f766e;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 0.35rem;
+    }
+    .app-title {
+        color: #111827;
+        font-size: 2.55rem;
+        font-weight: 760;
+        line-height: 1.08;
+        margin: 0;
+    }
+    .app-subtitle {
+        color: #475569;
+        font-size: 1.05rem;
+        line-height: 1.55;
+        max-width: 820px;
+        margin: 0.75rem 0 1.35rem 0;
+    }
+    .section-kicker {
+        color: #0f766e;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-top: 0.35rem;
+        margin-bottom: 0.25rem;
+    }
+    .section-title {
+        color: #111827;
+        font-size: 1.7rem;
+        font-weight: 720;
+        line-height: 1.2;
+        margin: 0 0 0.35rem 0;
+    }
+    .section-copy {
+        color: #64748b;
+        font-size: 0.98rem;
+        line-height: 1.55;
+        margin: 0 0 1rem 0;
+    }
+    .insight-panel {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #0f766e;
+        border-radius: 8px;
+        padding: 1rem 1.1rem;
+        margin: 0.35rem 0 1rem 0;
+    }
+    .insight-panel strong {
+        color: #111827;
+    }
+    .insight-panel p {
+        color: #475569;
+        margin: 0.25rem 0 0 0;
+        line-height: 1.5;
+    }
+    div[data-testid="stTabs"] button p {
+        font-weight: 650;
+    }
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
 
 @st.cache_data
 def load_csv(filename: str) -> pd.DataFrame:
@@ -25,7 +130,7 @@ def load_csv(filename: str) -> pd.DataFrame:
 def show_image(filename: str, caption: str) -> None:
     path = FIG_DIR / filename
     if path.exists():
-        st.image(Image.open(path), caption=caption, use_container_width=True)
+        st.image(Image.open(path), caption=caption, width="stretch")
     else:
         st.warning(f"Missing figure: {filename}")
 
@@ -38,20 +143,76 @@ def get_categorical_cols(df: pd.DataFrame):
     return df.select_dtypes(exclude="number").columns.tolist()
 
 
-st.title("Online Shopper Segmentation Explorer")
-st.caption("Interactive customer segmentation dashboard using K-means and Gaussian Mixture Models")
+def page_intro(kicker: str, title: str, copy: str) -> None:
+    st.markdown(
+        f"""
+<div class="section-kicker">{kicker}</div>
+<div class="section-title">{title}</div>
+<p class="section-copy">{copy}</p>
+""",
+        unsafe_allow_html=True,
+    )
+
+
+def insight_panel(title: str, copy: str) -> None:
+    st.markdown(
+        f"""
+<div class="insight-panel">
+    <strong>{title}</strong>
+    <p>{copy}</p>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+
+
+def style_chart(fig, title=None):
+    if title:
+        fig.update_layout(title=title)
+    fig.update_layout(
+        template="plotly_white",
+        colorway=SEGMENT_COLORS,
+        margin=dict(l=24, r=24, t=58, b=36),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="#ffffff",
+        font=dict(color=INK, family="Arial, sans-serif"),
+        title=dict(font=dict(size=18, color=INK), x=0.02),
+        legend=dict(title=None, orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    )
+    fig.update_xaxes(showgrid=False, zeroline=False)
+    fig.update_yaxes(gridcolor="#e5e7eb", zeroline=False)
+    return fig
+
 
 st.markdown(
     """
-This app turns my final project into a small analytics product. It summarizes the unsupervised learning results,
-compares K-means and Gaussian Mixture Models, and lets users explore the original online shopper dataset through
-custom visualizations.
-"""
+<div class="app-kicker">Customer analytics portfolio</div>
+<h1 class="app-title">Online Shopper Segmentation Explorer</h1>
+<p class="app-subtitle">
+An interactive dashboard for understanding purchase intent, shopper engagement, and segment-level revenue behavior
+using K-means and Gaussian Mixture Models.
+</p>
+""",
+    unsafe_allow_html=True,
 )
 
-st.sidebar.title("Navigation")
+st.markdown(
+    """
+<hr style="border: none; border-top: 1px solid #e5e7eb; margin: 0.4rem 0 1.4rem 0;" />
+""",
+    unsafe_allow_html=True,
+)
+
+st.sidebar.markdown(
+    """
+<h2 style="margin-bottom: 0.25rem;">Shopper Segments</h2>
+<p style="margin-top: 0; color: #cbd5e1;">Portfolio dashboard</p>
+""",
+    unsafe_allow_html=True,
+)
+
 section = st.sidebar.radio(
-    "Choose a section",
+    "View",
     [
         "Project Overview",
         "Data Explorer",
@@ -66,43 +227,74 @@ section = st.sidebar.radio(
 )
 
 if section == "Project Overview":
-    st.header("Project Overview")
+    page_intro(
+        "Executive overview",
+        "Purchase intent is concentrated in a small, high-engagement segment.",
+        "The dashboard highlights where shoppers differ most: browsing depth, page value, exit behavior, and conversion rate.",
+    )
 
     col1, col2, col3, col4 = st.columns(4)
     col1.metric("Sessions", "12,330")
-    col2.metric("Original Columns", "18")
+    col2.metric("Purchase Rate", "15.47%")
     col3.metric("Modeled Features", "75")
-    col4.metric("Purchase Rate", "15.47%")
+    col4.metric("Recommended Model", "K-means k=3")
 
-    st.subheader("Problem statement")
-    st.write(
-        """
-Online shopping sessions are heterogeneous. Some visitors browse casually, some compare products,
-and others show strong purchase intent. This project compares K-means and GMM to identify meaningful shopper
-segments and evaluate whether those segments differ in purchase behavior.
+    st.markdown("")
+    left_col, right_col = st.columns([1.05, 1])
+
+    with left_col:
+        insight_panel(
+            "Business signal",
+            "High-intent sessions account for a smaller share of traffic but show the strongest purchase rate and deepest product engagement.",
+        )
+        st.markdown(
+            """
+#### Segmentation decision
+K-means with three clusters provides the clearest business readout:
+
+- **High-intent shoppers:** strong page value, deep product browsing, lower exit behavior.
+- **Moderate browsers:** ordinary shopping behavior with meaningful conversion potential.
+- **Shallow visitors:** limited engagement and almost no purchase activity.
 """
-    )
+        )
 
-    st.subheader("Dataset and preprocessing")
-    st.write(
-        """
-The dataset contains 12,330 sessions and 18 columns. Revenue was removed before clustering and used only as a
-post-clustering evaluation variable. Numeric features were standardized, categorical features were one-hot encoded,
-and the final modeled feature matrix contained 75 features.
+    with right_col:
+        kmeans_revenue_overview = load_csv("kmeans_revenue.csv")
+        kmeans_revenue_overview["Revenue Rate Value"] = (
+            kmeans_revenue_overview["Revenue Rate"].str.rstrip("%").astype(float)
+        )
+        fig = px.bar(
+            kmeans_revenue_overview,
+            x="Interpretation",
+            y="Revenue Rate Value",
+            color="Interpretation",
+            text="Revenue Rate",
+        )
+        fig.update_traces(textposition="outside", cliponaxis=False)
+        fig.update_layout(showlegend=False, yaxis_title="Revenue rate", xaxis_title="")
+        st.plotly_chart(
+            style_chart(fig, "Purchase rate by K-means segment"),
+            width="stretch",
+        )
+
+    st.markdown("#### Revenue correlation")
+    show_image("revenue_correlation.png", "Numeric feature correlation with Revenue")
+
+    with st.expander("Modeling scope"):
+        st.write(
+            """
+Revenue was removed before clustering and used only after modeling to evaluate whether the discovered groups
+had different purchase behavior. Numeric features were standardized, categorical fields were one-hot encoded,
+and the final modeling table contained 75 features.
 """
-    )
-
-    show_image("revenue_correlation.png", "Correlation of numeric features with Revenue")
+        )
 
 
 elif section == "Data Explorer":
-    st.header("Interactive Raw Data Explorer")
-
-    st.write(
-        """
-This section lets users explore the original online shopper dataset and build their own visualizations.
-Users can filter the data, choose attributes, and compare shopper behavior across different groups.
-"""
+    page_intro(
+        "Data explorer",
+        "Investigate shopper behavior across traffic, visitor, month, and purchase outcomes.",
+        "Filter raw sessions and build quick visual comparisons for conversion patterns, engagement depth, and page value.",
     )
 
     raw_path = DATA_DIR / "online_shoppers_intention.csv"
@@ -115,24 +307,22 @@ Users can filter the data, choose attributes, and compare shopper behavior acros
 
     raw_df = pd.read_csv(raw_path)
 
+    data_metric_1, data_metric_2, data_metric_3, data_metric_4 = st.columns(4)
+    data_metric_1.metric("Raw Sessions", f"{raw_df.shape[0]:,}")
+    data_metric_2.metric("Columns", f"{raw_df.shape[1]:,}")
+    data_metric_3.metric("Purchase Rate", f"{raw_df['Revenue'].mean() * 100:.2f}%")
+    data_metric_4.metric("Visitor Types", f"{raw_df['VisitorType'].nunique():,}")
+
     tab1, tab2, tab3 = st.tabs(
         [
-            "Build Your Own Visualization",
-            "What We Did",
+            "Visualization Builder",
+            "Method",
             "Data Dictionary",
         ]
     )
 
     with tab1:
-        st.subheader("Build Your Own Visualization")
-
-        st.write(
-            """
-Use the filters below and then select the chart type and attributes you want to compare.
-For example, you can compare `PageValues` by `Revenue`, inspect `ProductRelated_Duration`,
-or review purchase behavior by `Month`, `VisitorType`, and `Weekend`.
-"""
-        )
+        st.subheader("Visualization Builder")
 
         filtered_df = raw_df.copy()
 
@@ -196,7 +386,7 @@ or review purchase behavior by `Month`, `VisitorType`, and `Weekend`.
         c4.metric("Missing Values", f"{filtered_df.isna().sum().sum():,}")
 
         with st.expander("Preview filtered data"):
-            st.dataframe(filtered_df, use_container_width=True, hide_index=True)
+            st.dataframe(filtered_df, width="stretch", hide_index=True)
 
         numeric_cols = get_numeric_cols(filtered_df)
         categorical_cols = get_categorical_cols(filtered_df)
@@ -232,7 +422,7 @@ or review purchase behavior by `Month`, `VisitorType`, and `Weekend`.
                     nbins=40,
                     title=f"Distribution of {x_col}",
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(style_chart(fig), width="stretch")
 
         elif chart_type == "Bar chart":
             x_col = st.selectbox("Choose category or attribute", all_cols)
@@ -273,7 +463,7 @@ or review purchase behavior by `Month`, `VisitorType`, and `Weekend`.
                     title=f"Average {y_col} by {x_col}",
                 )
 
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(style_chart(fig), width="stretch")
 
         elif chart_type == "Scatter plot":
             if len(numeric_cols) < 2:
@@ -291,7 +481,7 @@ or review purchase behavior by `Month`, `VisitorType`, and `Weekend`.
                     opacity=0.6,
                     title=f"{y_col} vs {x_col}",
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(style_chart(fig), width="stretch")
 
         elif chart_type == "Box plot":
             if not numeric_cols:
@@ -306,7 +496,7 @@ or review purchase behavior by `Month`, `VisitorType`, and `Weekend`.
                     y=y_col,
                     title=f"Box plot of {y_col}",
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(style_chart(fig), width="stretch")
 
         elif chart_type == "Correlation heatmap":
             if len(numeric_cols) < 2:
@@ -332,7 +522,7 @@ or review purchase behavior by `Month`, `VisitorType`, and `Weekend`.
                         )
                     )
                     fig.update_layout(title="Correlation Heatmap")
-                    st.plotly_chart(fig, use_container_width=True)
+                    st.plotly_chart(style_chart(fig), width="stretch")
                 else:
                     st.warning("Please choose at least two numeric attributes.")
 
@@ -443,27 +633,36 @@ The full-covariance GMM with 6 components had the best statistical fit by BIC.
             }
         )
 
-        st.dataframe(dictionary_df, use_container_width=True, hide_index=True)
+        st.dataframe(dictionary_df, width="stretch", hide_index=True)
 
 
 elif section == "Model Comparison":
-    st.header("Model Comparison Summary")
-    model_summary = load_csv("model_summary.csv")
-    st.dataframe(model_summary, use_container_width=True, hide_index=True)
-
-    st.info(
-        "K-means with k=3 was the easiest to explain as high-, medium-, and low-intent shopper segments. "
-        "The full-covariance GMM with 6 components achieved the best statistical fit by BIC."
+    page_intro(
+        "Model comparison",
+        "K-means explains the business segments most clearly; GMM provides the best statistical fit.",
+        "This view separates model selection logic from business interpretation so the recommendation is easier to defend.",
     )
+    model_summary = load_csv("model_summary.csv")
+    st.dataframe(model_summary, width="stretch", hide_index=True)
+
+    col_a, col_b = st.columns(2)
+    with col_a:
+        insight_panel(
+            "Recommended operating model",
+            "K-means k=3 is the best choice for stakeholder communication because the segments map cleanly to intent levels.",
+        )
+    with col_b:
+        insight_panel(
+            "Statistical benchmark",
+            "The full-covariance GMM with 6 components achieved the strongest BIC score and remains useful as a comparison model.",
+        )
 
 
 elif section == "K-means Results":
-    st.header("K-means Results")
-    st.write(
-        """
-K-means was used as the baseline hard clustering method. Candidate values of `k` from 2 to 8 were evaluated
-using silhouette score and inertia.
-"""
+    page_intro(
+        "K-means results",
+        "Three segments provide a practical view of shopper intent.",
+        "The K-means solution balances separation, interpretability, and business actionability.",
     )
 
     col1, col2 = st.columns(2)
@@ -474,63 +673,93 @@ using silhouette score and inertia.
 
     st.subheader("Revenue by K-means cluster")
     kmeans_revenue = load_csv("kmeans_revenue.csv")
-    st.dataframe(kmeans_revenue, use_container_width=True, hide_index=True)
+    kmeans_revenue_chart = kmeans_revenue.copy()
+    kmeans_revenue_chart["Revenue Rate Value"] = (
+        kmeans_revenue_chart["Revenue Rate"].str.rstrip("%").astype(float)
+    )
+    fig = px.bar(
+        kmeans_revenue_chart,
+        x="Interpretation",
+        y="Revenue Rate Value",
+        color="Interpretation",
+        text="Revenue Rate",
+    )
+    fig.update_traces(textposition="outside", cliponaxis=False)
+    fig.update_layout(showlegend=False, yaxis_title="Revenue rate", xaxis_title="")
+    st.plotly_chart(style_chart(fig, "Revenue rate by cluster"), width="stretch")
+    st.dataframe(kmeans_revenue, width="stretch", hide_index=True)
 
-    st.write(
-        """
-The `k=3` solution separated shoppers into high-intent, moderate browsing, and shallow visitor groups.
-The high-intent cluster had the highest purchase rate, while the shallow visitor cluster had almost no purchase activity.
-"""
+    insight_panel(
+        "Interpretation",
+        "The high-intent cluster converted at 28.26%, while shallow visitors converted at only 0.57%. This makes the segmentation useful for targeting and site experience decisions.",
     )
 
 
 elif section == "GMM Results":
-    st.header("Gaussian Mixture Model Results")
-    st.write(
-        """
-GMM models were tested using spherical, tied, diagonal, and full covariance structures. BIC and AIC were calculated,
-with BIC used as the primary model selection criterion.
-"""
+    page_intro(
+        "GMM results",
+        "Gaussian Mixture Models add a probabilistic view of shopper groups.",
+        "The full covariance model produced the strongest statistical fit, while tied covariance remained easier to interpret.",
     )
 
     show_image("gmm_bic.png", "GMM model selection by BIC")
 
     st.subheader("Revenue by GMM full-6 cluster")
     gmm_revenue = load_csv("gmm_revenue.csv")
-    st.dataframe(gmm_revenue, use_container_width=True, hide_index=True)
+    gmm_revenue_chart = gmm_revenue.copy()
+    gmm_revenue_chart["Revenue Rate Value"] = (
+        gmm_revenue_chart["Revenue Rate"].str.rstrip("%").astype(float)
+    )
+    fig = px.bar(
+        gmm_revenue_chart,
+        x="Cluster",
+        y="Revenue Rate Value",
+        color="Cluster",
+        text="Revenue Rate",
+    )
+    fig.update_traces(textposition="outside", cliponaxis=False)
+    fig.update_layout(showlegend=False, yaxis_title="Revenue rate", xaxis_title="Cluster")
+    st.plotly_chart(style_chart(fig, "GMM cluster revenue rates"), width="stretch")
+    st.dataframe(gmm_revenue, width="stretch", hide_index=True)
 
-    st.info(
-        "The full-covariance GMM with 6 components achieved the lowest BIC. The tied-covariance GMM was also useful "
-        "because it produced stronger silhouette separation and easier business interpretation."
+    insight_panel(
+        "Modeling note",
+        "GMM is valuable for comparison because it captures softer cluster boundaries, but K-means remains the clearer recommendation for business storytelling.",
     )
 
 
 elif section == "Cluster Profiles":
-    st.header("Cluster Profiles")
-    st.write(
-        """
-This table focuses on the K-means `k=3` solution because it produced the clearest business interpretation.
-"""
+    page_intro(
+        "Cluster profiles",
+        "The K-means segments differ most on page value, product browsing depth, bounce rate, and exit rate.",
+        "These profile metrics translate the model output into observable shopper behavior.",
     )
 
     profile = load_csv("kmeans_profile.csv")
-    st.dataframe(profile, use_container_width=True, hide_index=True)
+    st.dataframe(profile, width="stretch", hide_index=True)
 
-    st.markdown(
-        """
-**Interpretation:** The high-intent cluster had the strongest product-related browsing activity, highest `PageValues`,
-and lowest bounce/exit rates. The shallow visitor cluster showed almost no `PageValues` and much higher exit behavior.
-"""
+    profile_chart = profile[["Interpretation", "PageValues", "ProductRelated", "ExitRates"]].copy()
+    profile_chart = profile_chart.melt(
+        id_vars="Interpretation",
+        value_vars=["PageValues", "ProductRelated", "ExitRates"],
+        var_name="Metric",
+        value_name="Value",
+    )
+    fig = px.bar(profile_chart, x="Interpretation", y="Value", color="Metric", barmode="group")
+    fig.update_layout(xaxis_title="", yaxis_title="Profile value")
+    st.plotly_chart(style_chart(fig, "Segment profile comparison"), width="stretch")
+
+    insight_panel(
+        "Profile readout",
+        "High-intent shoppers show the strongest product browsing and page value. Shallow visitors show high exit behavior and near-zero page value.",
     )
 
 
 elif section == "PCA Visualizations":
-    st.header("PCA Visualizations")
-    st.write(
-        """
-PCA was used only for visualization. The first two principal components explained approximately **36.2%** of total
-variance, so these plots provide a useful but incomplete 2D view of the full 75-dimensional feature space.
-"""
+    page_intro(
+        "PCA visualizations",
+        "Two-dimensional PCA views summarize how the clusters separate in the modeled feature space.",
+        "The plots are useful for visual inspection, while the segment profiles and revenue rates provide the business interpretation.",
     )
 
     plot_choice = st.selectbox("Choose PCA plot", ["K-means k=3", "GMM full-6", "GMM tied-6"])
@@ -544,32 +773,41 @@ variance, so these plots provide a useful but incomplete 2D view of the full 75-
 
 
 elif section == "Business Takeaways":
-    st.header("Business Takeaways")
+    page_intro(
+        "Business actions",
+        "Each segment suggests a different growth lever.",
+        "The recommendation is to prioritize high-intent conversion, nurture moderate browsers, and diagnose shallow-visitor traffic quality.",
+    )
 
-    st.markdown(
-        """
-### High-intent shoppers
-These sessions show higher `PageValues`, longer product-related browsing, and lower bounce/exit rates.
-They may be good candidates for checkout nudges, personalized offers, or remarketing.
+    action_col_1, action_col_2, action_col_3 = st.columns(3)
+    with action_col_1:
+        insight_panel(
+            "High-intent shoppers",
+            "Use checkout nudges, personalized offers, and remarketing because these sessions already show strong engagement and page value.",
+        )
+    with action_col_2:
+        insight_panel(
+            "Moderate browsers",
+            "Use product recommendations, comparison support, and time-sensitive incentives to move engaged visitors toward purchase.",
+        )
+    with action_col_3:
+        insight_panel(
+            "Shallow visitors",
+            "Review landing page quality, traffic source relevance, and navigation because this group exits quickly and rarely purchases.",
+        )
 
-### Moderate browsers
-These users show some engagement but are less likely to purchase than the high-intent group.
-They may benefit from product recommendations or limited-time incentives.
-
-### Shallow visitors
-These sessions show limited browsing depth, low `PageValues`, and high exit behavior.
-For this group, the business may focus on landing page quality, traffic source quality, or site navigation.
-
-### Final takeaway
-K-means gave the clearest business segmentation, while GMM gave a more flexible statistical view of the data.
-Together, the models suggest that purchase intent is strongly related to browsing depth, `PageValues`, and exit behavior.
-"""
+    st.markdown("#### Final recommendation")
+    st.write(
+        "Use K-means k=3 as the primary business segmentation and keep GMM as a technical benchmark. Purchase intent is most strongly associated with browsing depth, PageValues, and exit behavior."
     )
 
 
 elif section == "Project Files":
-    st.header("Project Files")
-    st.write("The original report, notebook, and HTML code export are included in the `docs/` folder of this repository.")
+    page_intro(
+        "Project files",
+        "Download the supporting report, notebook, and code export.",
+        "These files document the analysis workflow behind the dashboard.",
+    )
 
     for file_name in [
         "Final_Project_Group_094.pdf",
