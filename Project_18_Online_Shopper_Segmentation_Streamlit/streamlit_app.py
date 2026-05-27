@@ -45,8 +45,8 @@ st.caption("Interactive customer segmentation dashboard using K-means and Gaussi
 st.markdown(
     """
 This app turns my final project into a small analytics product. It summarizes the unsupervised learning results,
-compares K-means and Gaussian Mixture Models, and gives users an interactive data explorer to review tables
-and create their own visualizations.
+compares K-means and Gaussian Mixture Models, and lets users explore the original online shopper dataset through
+custom visualizations.
 """
 )
 
@@ -97,140 +97,354 @@ and the final modeled feature matrix contained 75 features.
 
 
 elif section == "Data Explorer":
-    st.header("Interactive Data Explorer")
+    st.header("Interactive Raw Data Explorer")
+
     st.write(
         """
-Use this section to explore the project result tables or upload your own CSV file.
-This makes the app more like a business dashboard because users can inspect data and build quick visualizations.
+This section lets users explore the original online shopper dataset and build their own visualizations.
+Users can filter the data, choose attributes, and compare shopper behavior across different groups.
 """
     )
 
-    data_source = st.radio(
-        "Choose data source",
-        ["Use project result table", "Upload my own CSV"],
-        horizontal=True,
+    raw_path = DATA_DIR / "online_shoppers_intention.csv"
+
+    if not raw_path.exists():
+        st.error(
+            "The raw dataset is missing. Please add `online_shoppers_intention.csv` to the data folder."
+        )
+        st.stop()
+
+    raw_df = pd.read_csv(raw_path)
+
+    tab1, tab2, tab3 = st.tabs(
+        [
+            "Build Your Own Visualization",
+            "What We Did",
+            "Data Dictionary",
+        ]
     )
 
-    if data_source == "Use project result table":
-        table_options = {
-            "Model comparison": "model_summary.csv",
-            "K-means revenue by cluster": "kmeans_revenue.csv",
-            "GMM revenue by cluster": "gmm_revenue.csv",
-            "K-means cluster profile": "kmeans_profile.csv",
-        }
-        selected_table = st.selectbox("Choose a table", list(table_options.keys()))
-        df = load_csv(table_options[selected_table])
-    else:
-        uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
-        if uploaded_file is not None:
-            df = pd.read_csv(uploaded_file)
-        else:
-            st.info("Upload a CSV file to start exploring.")
-            st.stop()
+    with tab1:
+        st.subheader("Build Your Own Visualization")
 
-    st.subheader("Data Preview")
-    st.dataframe(df, use_container_width=True, hide_index=True)
+        st.write(
+            """
+Use the filters below and then select the chart type and attributes you want to compare.
+For example, you can compare `PageValues` by `Revenue`, inspect `ProductRelated_Duration`,
+or review purchase behavior by `Month`, `VisitorType`, and `Weekend`.
+"""
+        )
 
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Rows", f"{df.shape[0]:,}")
-    col2.metric("Columns", f"{df.shape[1]:,}")
-    col3.metric("Missing values", f"{int(df.isna().sum().sum()):,}")
+        filtered_df = raw_df.copy()
 
-    with st.expander("Show summary statistics"):
-        st.dataframe(df.describe(include="all").T, use_container_width=True)
+        col1, col2, col3, col4 = st.columns(4)
 
-    st.subheader("Build a Visualization")
-
-    numeric_cols = get_numeric_cols(df)
-    categorical_cols = get_categorical_cols(df)
-
-    chart_type = st.selectbox(
-        "Choose chart type",
-        ["Histogram", "Bar chart", "Scatter plot", "Box plot", "Correlation heatmap"],
-    )
-
-    if chart_type == "Histogram":
-        if not numeric_cols:
-            st.warning("This table does not have numeric columns for a histogram.")
-        else:
-            x_col = st.selectbox("Numeric column", numeric_cols)
-            color_col = st.selectbox("Optional color column", ["None"] + categorical_cols)
-            fig = px.histogram(
-                df,
-                x=x_col,
-                color=None if color_col == "None" else color_col,
-                title=f"Distribution of {x_col}",
-            )
-            st.plotly_chart(fig, use_container_width=True)
-
-    elif chart_type == "Bar chart":
-        if not categorical_cols and not numeric_cols:
-            st.warning("No suitable columns found.")
-        else:
-            x_col = st.selectbox("Column to count or group by", df.columns.tolist())
-            if df[x_col].nunique() > 30:
-                st.warning("This column has many unique values, so the chart may be crowded.")
-            counts = df[x_col].astype(str).value_counts().reset_index()
-            counts.columns = [x_col, "Count"]
-            fig = px.bar(counts, x=x_col, y="Count", title=f"Count by {x_col}")
-            st.plotly_chart(fig, use_container_width=True)
-
-    elif chart_type == "Scatter plot":
-        if len(numeric_cols) < 2:
-            st.warning("Need at least two numeric columns for a scatter plot.")
-        else:
-            x_col = st.selectbox("X-axis", numeric_cols)
-            y_col = st.selectbox("Y-axis", numeric_cols, index=1 if len(numeric_cols) > 1 else 0)
-            color_col = st.selectbox("Optional color column", ["None"] + df.columns.tolist())
-            fig = px.scatter(
-                df,
-                x=x_col,
-                y=y_col,
-                color=None if color_col == "None" else color_col,
-                title=f"{y_col} vs {x_col}",
-            )
-            st.plotly_chart(fig, use_container_width=True)
-
-    elif chart_type == "Box plot":
-        if not numeric_cols:
-            st.warning("Need at least one numeric column for a box plot.")
-        else:
-            y_col = st.selectbox("Numeric column", numeric_cols)
-            x_options = ["None"] + categorical_cols
-            x_col = st.selectbox("Optional category column", x_options)
-            fig = px.box(
-                df,
-                x=None if x_col == "None" else x_col,
-                y=y_col,
-                title=f"Box plot of {y_col}",
-            )
-            st.plotly_chart(fig, use_container_width=True)
-
-    elif chart_type == "Correlation heatmap":
-        if len(numeric_cols) < 2:
-            st.warning("Need at least two numeric columns for a correlation heatmap.")
-        else:
-            corr = df[numeric_cols].corr()
-            fig = go.Figure(
-                data=go.Heatmap(
-                    z=corr.values,
-                    x=corr.columns,
-                    y=corr.index,
-                    colorscale="RdBu",
-                    zmin=-1,
-                    zmax=1,
+        with col1:
+            if "Revenue" in filtered_df.columns:
+                revenue_filter = st.multiselect(
+                    "Revenue",
+                    options=sorted(filtered_df["Revenue"].astype(str).unique()),
+                    default=sorted(filtered_df["Revenue"].astype(str).unique()),
                 )
+                filtered_df = filtered_df[
+                    filtered_df["Revenue"].astype(str).isin(revenue_filter)
+                ]
+
+        with col2:
+            if "VisitorType" in filtered_df.columns:
+                visitor_filter = st.multiselect(
+                    "Visitor Type",
+                    options=sorted(filtered_df["VisitorType"].astype(str).unique()),
+                    default=sorted(filtered_df["VisitorType"].astype(str).unique()),
+                )
+                filtered_df = filtered_df[
+                    filtered_df["VisitorType"].astype(str).isin(visitor_filter)
+                ]
+
+        with col3:
+            if "Month" in filtered_df.columns:
+                month_filter = st.multiselect(
+                    "Month",
+                    options=sorted(filtered_df["Month"].astype(str).unique()),
+                    default=sorted(filtered_df["Month"].astype(str).unique()),
+                )
+                filtered_df = filtered_df[
+                    filtered_df["Month"].astype(str).isin(month_filter)
+                ]
+
+        with col4:
+            if "Weekend" in filtered_df.columns:
+                weekend_filter = st.multiselect(
+                    "Weekend",
+                    options=sorted(filtered_df["Weekend"].astype(str).unique()),
+                    default=sorted(filtered_df["Weekend"].astype(str).unique()),
+                )
+                filtered_df = filtered_df[
+                    filtered_df["Weekend"].astype(str).isin(weekend_filter)
+                ]
+
+        st.markdown("### Filtered Data Summary")
+
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Rows", f"{filtered_df.shape[0]:,}")
+        c2.metric("Columns", f"{filtered_df.shape[1]:,}")
+
+        if "Revenue" in filtered_df.columns:
+            c3.metric("Purchase Rate", f"{filtered_df['Revenue'].mean() * 100:.2f}%")
+        else:
+            c3.metric("Purchase Rate", "N/A")
+
+        c4.metric("Missing Values", f"{filtered_df.isna().sum().sum():,}")
+
+        with st.expander("Preview filtered data"):
+            st.dataframe(filtered_df, use_container_width=True, hide_index=True)
+
+        numeric_cols = get_numeric_cols(filtered_df)
+        categorical_cols = get_categorical_cols(filtered_df)
+        all_cols = filtered_df.columns.tolist()
+
+        st.markdown("### Custom Visualization Builder")
+
+        chart_type = st.selectbox(
+            "Choose chart type",
+            [
+                "Histogram",
+                "Bar chart",
+                "Scatter plot",
+                "Box plot",
+                "Correlation heatmap",
+            ],
+        )
+
+        if chart_type == "Histogram":
+            if not numeric_cols:
+                st.warning("No numeric columns are available for a histogram.")
+            else:
+                x_col = st.selectbox("Choose numeric attribute", numeric_cols)
+                color_col = st.selectbox(
+                    "Optional color/grouping",
+                    ["None"] + categorical_cols,
+                )
+
+                fig = px.histogram(
+                    filtered_df,
+                    x=x_col,
+                    color=None if color_col == "None" else color_col,
+                    nbins=40,
+                    title=f"Distribution of {x_col}",
+                )
+                st.plotly_chart(fig, use_container_width=True)
+
+        elif chart_type == "Bar chart":
+            x_col = st.selectbox("Choose category or attribute", all_cols)
+
+            value_option = st.radio(
+                "Bar chart type",
+                ["Count records", "Average of numeric attribute"],
+                horizontal=True,
             )
-            fig.update_layout(title="Correlation Heatmap")
+
+            if value_option == "Count records":
+                chart_df = filtered_df[x_col].astype(str).value_counts().reset_index()
+                chart_df.columns = [x_col, "Count"]
+
+                fig = px.bar(
+                    chart_df,
+                    x=x_col,
+                    y="Count",
+                    title=f"Count by {x_col}",
+                )
+            else:
+                if not numeric_cols:
+                    st.warning("No numeric columns are available to average.")
+                    st.stop()
+
+                y_col = st.selectbox("Choose numeric attribute to average", numeric_cols)
+
+                chart_df = (
+                    filtered_df.groupby(x_col, as_index=False)[y_col]
+                    .mean()
+                    .sort_values(y_col, ascending=False)
+                )
+
+                fig = px.bar(
+                    chart_df,
+                    x=x_col,
+                    y=y_col,
+                    title=f"Average {y_col} by {x_col}",
+                )
+
             st.plotly_chart(fig, use_container_width=True)
 
-    csv = df.to_csv(index=False).encode("utf-8")
-    st.download_button(
-        label="Download current table as CSV",
-        data=csv,
-        file_name="explored_data.csv",
-        mime="text/csv",
-    )
+        elif chart_type == "Scatter plot":
+            if len(numeric_cols) < 2:
+                st.warning("Need at least two numeric columns for a scatter plot.")
+            else:
+                x_col = st.selectbox("X-axis", numeric_cols)
+                y_col = st.selectbox("Y-axis", numeric_cols, index=1)
+                color_col = st.selectbox("Color by", ["None"] + all_cols)
+
+                fig = px.scatter(
+                    filtered_df,
+                    x=x_col,
+                    y=y_col,
+                    color=None if color_col == "None" else color_col,
+                    opacity=0.6,
+                    title=f"{y_col} vs {x_col}",
+                )
+                st.plotly_chart(fig, use_container_width=True)
+
+        elif chart_type == "Box plot":
+            if not numeric_cols:
+                st.warning("Need at least one numeric column for a box plot.")
+            else:
+                y_col = st.selectbox("Numeric attribute", numeric_cols)
+                x_col = st.selectbox("Group by", ["None"] + categorical_cols)
+
+                fig = px.box(
+                    filtered_df,
+                    x=None if x_col == "None" else x_col,
+                    y=y_col,
+                    title=f"Box plot of {y_col}",
+                )
+                st.plotly_chart(fig, use_container_width=True)
+
+        elif chart_type == "Correlation heatmap":
+            if len(numeric_cols) < 2:
+                st.warning("Need at least two numeric columns for a correlation heatmap.")
+            else:
+                selected_numeric = st.multiselect(
+                    "Choose numeric attributes",
+                    numeric_cols,
+                    default=numeric_cols[:8],
+                )
+
+                if len(selected_numeric) >= 2:
+                    corr = filtered_df[selected_numeric].corr()
+
+                    fig = go.Figure(
+                        data=go.Heatmap(
+                            z=corr.values,
+                            x=corr.columns,
+                            y=corr.index,
+                            colorscale="RdBu",
+                            zmin=-1,
+                            zmax=1,
+                        )
+                    )
+                    fig.update_layout(title="Correlation Heatmap")
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.warning("Please choose at least two numeric attributes.")
+
+        st.download_button(
+            label="Download filtered data as CSV",
+            data=filtered_df.to_csv(index=False).encode("utf-8"),
+            file_name="filtered_online_shopper_data.csv",
+            mime="text/csv",
+        )
+
+    with tab2:
+        st.subheader("What We Did in the Project")
+
+        st.markdown(
+            """
+### 1. Started with exploratory data analysis
+I reviewed the dataset structure, missing values, summary statistics, feature distributions, and purchase rate.
+The purchase rate was about **15.47%**, meaning most sessions did not end in a purchase.
+
+### 2. Removed Revenue before clustering
+`Revenue` was not used to train the clustering models.  
+It was only used afterward to evaluate whether the discovered clusters had different purchase behavior.
+
+### 3. Preprocessed the features
+Numeric variables were standardized, and categorical variables such as `Month`, `VisitorType`,
+`Browser`, and `TrafficType` were one-hot encoded. The final modeled feature matrix had **75 features**.
+
+### 4. Compared K-means and GMM
+K-means was used as a baseline hard clustering method.  
+Gaussian Mixture Models were used because they allow probabilistic cluster membership and more flexible cluster shapes.
+
+### 5. Evaluated the models
+K-means was evaluated using silhouette score and inertia.  
+GMM was evaluated using BIC, AIC, silhouette score, revenue rate by cluster, and interpretability.
+
+### Main finding
+K-means with `k=3` produced the clearest business interpretation:
+high-intent shoppers, moderate browsers, and shallow visitors.  
+The full-covariance GMM with 6 components had the best statistical fit by BIC.
+"""
+        )
+
+    with tab3:
+        st.subheader("Data Dictionary")
+
+        dictionary_df = pd.DataFrame(
+            {
+                "Attribute": [
+                    "Administrative",
+                    "Administrative_Duration",
+                    "Informational",
+                    "Informational_Duration",
+                    "ProductRelated",
+                    "ProductRelated_Duration",
+                    "BounceRates",
+                    "ExitRates",
+                    "PageValues",
+                    "SpecialDay",
+                    "Month",
+                    "OperatingSystems",
+                    "Browser",
+                    "Region",
+                    "TrafficType",
+                    "VisitorType",
+                    "Weekend",
+                    "Revenue",
+                ],
+                "Explanation": [
+                    "Number of administrative/account-management pages visited",
+                    "Total time spent on administrative pages",
+                    "Number of informational pages visited",
+                    "Total time spent on informational pages",
+                    "Number of product-related pages visited",
+                    "Total time spent on product-related pages",
+                    "Average bounce rate of pages visited",
+                    "Average exit rate of pages visited",
+                    "Average value of pages visited before transaction",
+                    "Closeness of the session date to a special shopping day",
+                    "Month of the user session",
+                    "Operating system used by the visitor",
+                    "Browser used by the visitor",
+                    "Region of the visitor",
+                    "Traffic source that brought the visitor to the site",
+                    "Type of visitor: new, returning, or other",
+                    "Whether the visit occurred on a weekend",
+                    "Whether the session ended with a purchase",
+                ],
+                "Example": [
+                    "2",
+                    "80.8 seconds",
+                    "1",
+                    "34.5 seconds",
+                    "32",
+                    "1194.7 seconds",
+                    "0.02",
+                    "0.04",
+                    "5.89",
+                    "0.0",
+                    "Nov",
+                    "2",
+                    "2",
+                    "1",
+                    "2",
+                    "Returning_Visitor",
+                    "True / False",
+                    "True / False",
+                ],
+            }
+        )
+
+        st.dataframe(dictionary_df, use_container_width=True, hide_index=True)
 
 
 elif section == "Model Comparison":
