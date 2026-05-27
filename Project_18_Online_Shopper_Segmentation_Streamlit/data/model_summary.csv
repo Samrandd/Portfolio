@@ -1,0 +1,5 @@
+Model,Selection basis,Metric value,Interpretation
+K-means (k=2),Highest silhouette among K-means,Silhouette = 0.302,Best-separated K-means solution
+K-means (k=3),Elbow support + interpretability,Silhouette = 0.285,Most interpretable K-means segmentation
+GMM (full, 6),Lowest BIC among GMM models,BIC = -4.599e6,Best statistical fit overall
+GMM (tied, 6),Higher silhouette than full GMM + interpretability,BIC = -1.818e6; Silhouette = 0.245,More interpretable GMM comparison model

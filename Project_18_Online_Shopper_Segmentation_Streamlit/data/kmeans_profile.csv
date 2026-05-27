@@ -1,0 +1,4 @@
+Model / Cluster,Revenue Rate,PageValues,ProductRelated,ProductRelated_Duration,BounceRates,ExitRates,Interpretation
+K-means C0,28.26%,9.75,96.82,3835.19,0.006,0.019,High-intent shoppers
+K-means C1,14.95%,5.88,23.88,873.46,0.009,0.032,Moderate browsers
+K-means C2,0.57%,0.00,3.09,58.12,0.166,0.180,Shallow visitors
