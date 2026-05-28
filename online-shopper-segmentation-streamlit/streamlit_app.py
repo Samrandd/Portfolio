@@ -214,6 +214,7 @@ st.sidebar.markdown(
 section = st.sidebar.radio(
     "View",
     [
+        "Problem & Data",
         "Project Overview",
         "Data Explorer",
         "Model Comparison",
@@ -226,7 +227,83 @@ section = st.sidebar.radio(
     ],
 )
 
-if section == "Project Overview":
+if section == "Problem & Data":
+    page_intro(
+        "Start here",
+        "The project starts with a business problem: most online visits do not become purchases.",
+        "The goal is to understand which browsing behaviors separate high-intent shoppers from ordinary browsers and shallow visitors, then turn those patterns into usable customer segments.",
+    )
+
+    metric_a, metric_b, metric_c, metric_d = st.columns(4)
+    metric_a.metric("Dataset", "UCI")
+    metric_b.metric("Sessions", "12,330")
+    metric_c.metric("Fields", "18")
+    metric_d.metric("Target Field", "Revenue")
+
+    st.markdown("")
+    source_col, objective_col = st.columns([1, 1])
+
+    with source_col:
+        st.markdown("#### Where the data comes from")
+        st.write(
+            "The data is the **Online Shoppers Purchasing Intention Dataset** from the UCI Machine Learning Repository."
+        )
+        st.markdown(
+            "[Open the official UCI dataset page](https://archive.ics.uci.edu/dataset/468/online+shoppers+purchasing+intention+dataset)"
+        )
+        st.write(
+            "The Streamlit app uses a local copy of the CSV in `online-shopper-segmentation-streamlit/data/online_shoppers_intention.csv`."
+        )
+        st.markdown(
+            """
+The dataset describes website sessions using page counts, visit durations, bounce and exit behavior,
+traffic source, visitor type, month, weekend status, and whether the session ended in purchase.
+"""
+        )
+
+    with objective_col:
+        st.markdown("#### What we are trying to solve")
+        st.write(
+            "Instead of only predicting purchase/no purchase, this project asks a more strategic question: **what kinds of shoppers are visiting the site?**"
+        )
+        st.markdown(
+            """
+- Identify shopper groups based on behavior before using `Revenue`.
+- Compare whether those groups differ in purchase rate.
+- Decide whether K-means or GMM gives the better segmentation lens.
+- Translate the segments into practical marketing and site-experience actions.
+"""
+        )
+
+    st.markdown("#### Questions this dashboard answers")
+    question_col_1, question_col_2, question_col_3 = st.columns(3)
+    with question_col_1:
+        insight_panel(
+            "Who looks ready to buy?",
+            "High-intent shoppers show stronger product browsing, higher PageValues, and lower exit behavior.",
+        )
+    with question_col_2:
+        insight_panel(
+            "Which model helps most?",
+            "K-means is easier to explain, while GMM can capture overlapping shopper behavior and softer cluster boundaries.",
+        )
+    with question_col_3:
+        insight_panel(
+            "What should the business do?",
+            "Use segment profiles to decide where to target offers, where to nurture browsers, and where to improve traffic or landing-page quality.",
+        )
+
+    with st.expander("Why clustering instead of only prediction?"):
+        st.write(
+            """
+A prediction model can estimate whether a session will purchase, but it may not explain the types of shoppers behind
+that prediction. Clustering groups similar sessions first, then uses `Revenue` afterward to evaluate whether the
+groups are commercially meaningful. This makes the result easier to connect to marketing, product, and website decisions.
+"""
+        )
+
+
+elif section == "Project Overview":
     page_intro(
         "Executive overview",
         "Purchase intent is concentrated in a small, high-engagement segment.",

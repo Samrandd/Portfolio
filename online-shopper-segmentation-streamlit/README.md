@@ -12,18 +12,22 @@ The project compares **K-means clustering** and **Gaussian Mixture Models (GMM)*
 - Found that the full-covariance GMM with 6 components achieved the lowest BIC.
 - Used revenue-by-cluster and cluster profiles to connect model outputs to shopper intent.
 - Added PCA visualizations to compare how the cluster structures appear in two dimensions.
+- Added a problem and data overview so visitors understand the business context before reviewing models.
 
 ## App sections
 
 The Streamlit app includes:
 
-1. Project overview
-2. Model comparison
-3. K-means results
-4. GMM results
-5. Cluster profiles
-6. PCA visualizations
-7. Business takeaways
+1. Problem and data overview
+2. Project overview
+3. Data explorer
+4. Model comparison
+5. K-means results
+6. GMM results
+7. Cluster profiles
+8. PCA visualizations
+9. Business takeaways
+10. Project files
 
 ## Repository structure
 
