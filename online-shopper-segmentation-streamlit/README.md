@@ -45,10 +45,10 @@ The Streamlit app includes:
 │   ├── pca_gmm_full.png
 │   └── pca_gmm_tied.png
 └── docs/
-    ├── Final_Project_Group_094.ipynb
-    ├── Final_Project_Group_094.pdf
-    ├── Final_Project_Group_094_code.html
-    └── stoufani3_Final_Report_Project_Group094.docx
+    ├── online_shopper_segmentation_notebook.ipynb
+    ├── online_shopper_segmentation_report.pdf
+    ├── online_shopper_segmentation_code_export.html
+    └── online_shopper_segmentation_final_report.docx
 ```
 
 ## Run locally
