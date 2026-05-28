@@ -212,7 +212,7 @@ st.sidebar.markdown(
 )
 
 section = st.sidebar.radio(
-    "Story flow",
+    "Analysis flow",
     [
         "1. Problem & Data",
         "2. Executive Summary",
@@ -291,29 +291,6 @@ traffic source, visitor type, month, weekend status, and whether the session end
         insight_panel(
             "What should the business do?",
             "Use segment profiles to decide where to target offers, where to nurture browsers, and where to improve traffic or landing-page quality.",
-        )
-
-    st.markdown("#### How to follow the story")
-    story_col_1, story_col_2, story_col_3, story_col_4 = st.columns(4)
-    with story_col_1:
-        insight_panel(
-            "1. Frame the problem",
-            "Start with the purchase-intent problem, the dataset, and what the project is trying to solve.",
-        )
-    with story_col_2:
-        insight_panel(
-            "2. Inspect behavior",
-            "Use the data explorer to see how browsing behavior, visitor type, and Revenue relate to one another.",
-        )
-    with story_col_3:
-        insight_panel(
-            "3. Compare models",
-            "Review why K-means is easier to communicate and why GMM can capture richer cluster structure.",
-        )
-    with story_col_4:
-        insight_panel(
-            "4. Decide actions",
-            "Use segment profiles and business actions to translate the analysis into practical recommendations.",
         )
 
     with st.expander("Why clustering instead of only prediction?"):
