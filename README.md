@@ -25,6 +25,6 @@ Project | Focus
 [Online Shopper Segmentation Streamlit App](online-shopper-segmentation-streamlit) | Deployment-ready shopper segmentation dashboard
 [Tableau and Excel Visualisation](Visualisation) | Tableau and Excel visual analytics
 
-I have completed many projects which show my skill sets and understanding of machine learning, statistics, Python, and practical data science methods for real-world problems. These projects span exploratory data analysis, statistical testing, machine learning modeling, visualization, text analytics, and deployment-ready applications.
+I have completed many projects which show my skill sets and understanding of machine learning, statistics, Python, and practical data science methods for real-world problems. These projects span exploratory data analysis, statistical testing, machine learning modeling, text analytics, and deployment-ready applications.
 
 Skills showcased: Python | SQL | Tableau | Machine Learning | Web Scraping | Pandas | NumPy | Linear Regression | Logistic Regression | Random Forests | NLP | Marketing Analytics | Text Analytics | Panel Data | Naive Bayes | KNN | K-means | DBSCAN | Hierarchical Clustering | SVM | Decision Trees | Ensemble Methods | Data Visualization | Feature Engineering | Hypothesis Testing | Technical Writing
