@@ -1,0 +1,31 @@
+name: Streamlit App Check
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  app-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Streamlit app dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r online-shopper-segmentation-streamlit/requirements.txt
+
+      - name: Compile Streamlit entrypoints
+        run: |
+          python -m py_compile online-shopper-segmentation-streamlit/streamlit_app.py
+          python -m py_compile Project_18_Online_Shopper_Segmentation_Streamlit/streamlit_app.py

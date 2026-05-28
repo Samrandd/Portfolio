@@ -1,0 +1,36 @@
+# Local environment files
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+secrets.toml
+
+# Credentials and private keys
+*.key
+*.pem
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local logs and system files
+*.log
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.idea/
+.vscode/
