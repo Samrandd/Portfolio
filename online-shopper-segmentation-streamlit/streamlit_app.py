@@ -561,7 +561,7 @@ GMM was evaluated using BIC, AIC, silhouette score, revenue rate by cluster, and
 ### Main finding
 K-means with `k=3` produced the clearest business interpretation:
 high-intent shoppers, moderate browsers, and shallow visitors.  
-The full-covariance GMM with 6 components had the best statistical fit by BIC.
+The full-covariance GMM with 6 components had the best statistical fit by BIC, which suggests it may capture more subtle overlap in shopper behavior than K-means.
 """
         )
 
@@ -639,8 +639,8 @@ The full-covariance GMM with 6 components had the best statistical fit by BIC.
 elif section == "Model Comparison":
     page_intro(
         "Model comparison",
-        "K-means explains the business segments most clearly; GMM provides the best statistical fit.",
-        "This view separates model selection logic from business interpretation so the recommendation is easier to defend.",
+        "K-means gives the clearest business story; GMM gives a more flexible statistical view.",
+        "The strongest recommendation is not that one model replaces the other. K-means is best for simple segment labels, while GMM is useful when shopper behavior overlaps across groups.",
     )
     model_summary = load_csv("model_summary.csv")
     st.dataframe(model_summary, width="stretch", hide_index=True)
@@ -653,9 +653,14 @@ elif section == "Model Comparison":
         )
     with col_b:
         insight_panel(
-            "Statistical benchmark",
-            "The full-covariance GMM with 6 components achieved the strongest BIC score and remains useful as a comparison model.",
+            "Where GMM is stronger",
+            "The full-covariance GMM with 6 components achieved the strongest BIC score. It can capture softer boundaries, unequal cluster shapes, and mixed shopper behavior better than hard K-means labels.",
         )
+
+    insight_panel(
+        "How to position the models",
+        "Use K-means k=3 as the executive segmentation because it is easy to explain. Use GMM as the deeper analytical lens when you want probability-based membership, more granular clusters, or evidence that the shopper groups are not perfectly separated.",
+    )
 
 
 elif section == "K-means Results":
@@ -698,8 +703,8 @@ elif section == "K-means Results":
 elif section == "GMM Results":
     page_intro(
         "GMM results",
-        "Gaussian Mixture Models add a probabilistic view of shopper groups.",
-        "The full covariance model produced the strongest statistical fit, while tied covariance remained easier to interpret.",
+        "Gaussian Mixture Models can be better when shopper behavior is blended rather than cleanly separated.",
+        "Instead of forcing every session into a hard group, GMM estimates the probability that a session belongs to each cluster and allows clusters to have different shapes.",
     )
 
     show_image("gmm_bic.png", "GMM model selection by BIC")
@@ -722,10 +727,17 @@ elif section == "GMM Results":
     st.plotly_chart(style_chart(fig, "GMM cluster revenue rates"), width="stretch")
     st.dataframe(gmm_revenue, width="stretch", hide_index=True)
 
-    insight_panel(
-        "Modeling note",
-        "GMM is valuable for comparison because it captures softer cluster boundaries, but K-means remains the clearer recommendation for business storytelling.",
-    )
+    gmm_col_1, gmm_col_2 = st.columns(2)
+    with gmm_col_1:
+        insight_panel(
+            "Why GMM can be better",
+            "Online shoppers do not always fall into neat groups. A session may look partly like a browser and partly like a high-intent shopper. GMM handles this uncertainty by assigning probabilities instead of only one fixed label.",
+        )
+    with gmm_col_2:
+        insight_panel(
+            "Tradeoff",
+            "The six-cluster GMM fits the data better statistically, but it is harder to explain to non-technical stakeholders. That makes it a strong analytical model and a useful benchmark, while K-means remains cleaner for presentation.",
+        )
 
 
 elif section == "Cluster Profiles":
@@ -798,7 +810,7 @@ elif section == "Business Takeaways":
 
     st.markdown("#### Final recommendation")
     st.write(
-        "Use K-means k=3 as the primary business segmentation and keep GMM as a technical benchmark. Purchase intent is most strongly associated with browsing depth, PageValues, and exit behavior."
+        "Use K-means k=3 as the primary business segmentation for clear stakeholder communication. Use the full-covariance GMM as a deeper analytical layer when you want more granular clusters, probability-based membership, or a better statistical fit. Purchase intent is most strongly associated with browsing depth, PageValues, and exit behavior."
     )
 
 
