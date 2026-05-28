@@ -212,22 +212,22 @@ st.sidebar.markdown(
 )
 
 section = st.sidebar.radio(
-    "View",
+    "Story flow",
     [
-        "Problem & Data",
-        "Project Overview",
-        "Data Explorer",
-        "Model Comparison",
-        "K-means Results",
-        "GMM Results",
-        "Cluster Profiles",
-        "PCA Visualizations",
-        "Business Takeaways",
-        "Project Files",
+        "1. Problem & Data",
+        "2. Executive Summary",
+        "3. Explore Shopper Behavior",
+        "4. Compare Models",
+        "5. K-means Segments",
+        "6. GMM Deep Dive",
+        "7. Segment Profiles",
+        "8. PCA Check",
+        "9. Business Actions",
+        "10. Project Files",
     ],
 )
 
-if section == "Problem & Data":
+if section == "1. Problem & Data":
     page_intro(
         "Start here",
         "The project starts with a business problem: most online visits do not become purchases.",
@@ -293,6 +293,29 @@ traffic source, visitor type, month, weekend status, and whether the session end
             "Use segment profiles to decide where to target offers, where to nurture browsers, and where to improve traffic or landing-page quality.",
         )
 
+    st.markdown("#### How to follow the story")
+    story_col_1, story_col_2, story_col_3, story_col_4 = st.columns(4)
+    with story_col_1:
+        insight_panel(
+            "1. Frame the problem",
+            "Start with the purchase-intent problem, the dataset, and what the project is trying to solve.",
+        )
+    with story_col_2:
+        insight_panel(
+            "2. Inspect behavior",
+            "Use the data explorer to see how browsing behavior, visitor type, and Revenue relate to one another.",
+        )
+    with story_col_3:
+        insight_panel(
+            "3. Compare models",
+            "Review why K-means is easier to communicate and why GMM can capture richer cluster structure.",
+        )
+    with story_col_4:
+        insight_panel(
+            "4. Decide actions",
+            "Use segment profiles and business actions to translate the analysis into practical recommendations.",
+        )
+
     with st.expander("Why clustering instead of only prediction?"):
         st.write(
             """
@@ -303,7 +326,7 @@ groups are commercially meaningful. This makes the result easier to connect to m
         )
 
 
-elif section == "Project Overview":
+elif section == "2. Executive Summary":
     page_intro(
         "Executive overview",
         "Purchase intent is concentrated in a small, high-engagement segment.",
@@ -367,7 +390,7 @@ and the final modeling table contained 75 features.
         )
 
 
-elif section == "Data Explorer":
+elif section == "3. Explore Shopper Behavior":
     page_intro(
         "Data explorer",
         "Investigate shopper behavior across traffic, visitor, month, and purchase outcomes.",
@@ -713,7 +736,7 @@ The full-covariance GMM with 6 components had the best statistical fit by BIC, w
         st.dataframe(dictionary_df, width="stretch", hide_index=True)
 
 
-elif section == "Model Comparison":
+elif section == "4. Compare Models":
     page_intro(
         "Model comparison",
         "K-means gives the clearest business story; GMM gives a more flexible statistical view.",
@@ -740,7 +763,7 @@ elif section == "Model Comparison":
     )
 
 
-elif section == "K-means Results":
+elif section == "5. K-means Segments":
     page_intro(
         "K-means results",
         "Three segments provide a practical view of shopper intent.",
@@ -777,7 +800,7 @@ elif section == "K-means Results":
     )
 
 
-elif section == "GMM Results":
+elif section == "6. GMM Deep Dive":
     page_intro(
         "GMM results",
         "Gaussian Mixture Models can be better when shopper behavior is blended rather than cleanly separated.",
@@ -817,7 +840,7 @@ elif section == "GMM Results":
         )
 
 
-elif section == "Cluster Profiles":
+elif section == "7. Segment Profiles":
     page_intro(
         "Cluster profiles",
         "The K-means segments differ most on page value, product browsing depth, bounce rate, and exit rate.",
@@ -844,7 +867,7 @@ elif section == "Cluster Profiles":
     )
 
 
-elif section == "PCA Visualizations":
+elif section == "8. PCA Check":
     page_intro(
         "PCA visualizations",
         "Two-dimensional PCA views summarize how the clusters separate in the modeled feature space.",
@@ -861,7 +884,7 @@ elif section == "PCA Visualizations":
         show_image("pca_gmm_tied.png", "PCA visualization of GMM tied covariance, 6 components")
 
 
-elif section == "Business Takeaways":
+elif section == "9. Business Actions":
     page_intro(
         "Business actions",
         "Each segment suggests a different growth lever.",
@@ -891,7 +914,7 @@ elif section == "Business Takeaways":
     )
 
 
-elif section == "Project Files":
+elif section == "10. Project Files":
     page_intro(
         "Project files",
         "Download the supporting report, notebook, and code export.",

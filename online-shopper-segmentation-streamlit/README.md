@@ -18,15 +18,15 @@ The project compares **K-means clustering** and **Gaussian Mixture Models (GMM)*
 
 The Streamlit app includes:
 
-1. Problem and data overview
-2. Project overview
-3. Data explorer
-4. Model comparison
-5. K-means results
-6. GMM results
-7. Cluster profiles
-8. PCA visualizations
-9. Business takeaways
+1. Problem and data
+2. Executive summary
+3. Explore shopper behavior
+4. Compare models
+5. K-means segments
+6. GMM deep dive
+7. Segment profiles
+8. PCA check
+9. Business actions
 10. Project files
 
 ## Repository structure
