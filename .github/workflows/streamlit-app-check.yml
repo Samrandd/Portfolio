@@ -28,4 +28,4 @@ jobs:
       - name: Compile Streamlit entrypoints
         run: |
           python -m py_compile online-shopper-segmentation-streamlit/streamlit_app.py
-          python -m py_compile Project_18_Online_Shopper_Segmentation_Streamlit/streamlit_app.py
+          python -m py_compile Online_Shopper_Segmentation_Streamlit/streamlit_app.py
