@@ -22,6 +22,7 @@ Project | Focus
 [Employee Churn HR Analytics](employee-churn-hr-analytics) | Data-driven employee churn guidance
 [Telecom Customer Churn Prediction](telecom-customer-churn-prediction) | Customer churn prediction in telecommunications
 [Amazon Review Marketing Intelligence](amazon-review-marketing-intelligence) | Review text analytics for product reputation monitoring
+[Leakage-Safe DistilBERT Transaction Classifier](leakage-safe-distilbert-transaction-classifier) | NLP transaction categorization across 18 classes with grouped leakage-safe evaluation
 [Marketing Campaign Incrementality](Marketing-Campaign-Incrementality) | Campaign lift measurement and customer targeting
 [Online Shopper Segmentation Streamlit App](online-shopper-segmentation-streamlit) | Deployment-ready shopper segmentation dashboard
 [Tableau and Excel Visualisation](Visualisation) | Tableau and Excel visual analytics
