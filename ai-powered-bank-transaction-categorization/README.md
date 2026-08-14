@@ -1,4 +1,4 @@
-# Leakage-Safe DistilBERT Transaction Classifier
+# AI-Powered Bank Transaction Categorization with DistilBERT
 
 An NLP portfolio project that fine-tunes DistilBERT to classify short bank-transaction descriptions across 18 spending categories.
 
