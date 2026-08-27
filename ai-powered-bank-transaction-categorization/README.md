@@ -2,6 +2,19 @@
 
 An NLP portfolio project that fine-tunes DistilBERT to classify short bank-transaction descriptions across 18 spending categories.
 
+## Interactive Streamlit app
+
+The included Streamlit dashboard supports single-transaction prediction, top-three confidence scores, review routing, batch CSV classification, and model-performance documentation.
+
+```bash
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+```
+
+The app defaults to the public model at [`samrandt/distilbert-transaction-classifie`](https://huggingface.co/samrandt/distilbert-transaction-classifie). No token is required. Set `MODEL_REPO` to override it, or place a local export in `distilbert_transaction_classifier_18/` beside the app.
+
+See [`DEPLOYMENT.md`](DEPLOYMENT.md) for Hugging Face model hosting and Streamlit Community Cloud setup.
+
 > **Important:** This experiment uses synthetic transaction data. The reported results demonstrate the modeling and evaluation workflow and should not be interpreted as verified production performance on live banking data.
 
 ## Project overview
@@ -139,4 +152,5 @@ The strongest implementation would be hybrid: accept high-confidence model predi
 
 - [`README.md`](README.md) — concise GitHub project overview
 - [`Building_a_Leakage_Safe_DistilBERT_Transaction_Classifier.md`](Building_a_Leakage_Safe_DistilBERT_Transaction_Classifier.md) — full Medium article with the complete project narrative
-
+- [`streamlit_app.py`](streamlit_app.py) — interactive prediction and batch-classification dashboard
+- [`DEPLOYMENT.md`](DEPLOYMENT.md) — model hosting and Streamlit Community Cloud instructions
